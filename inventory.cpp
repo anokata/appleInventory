@@ -79,29 +79,30 @@ void Inventory::moveItem(Item *item, int col, int row)
 {
     QSqlQuery query = dataBase->itemAtCell(col, row);
     if (query.next()) {
-        // Куда ложим уже есть предмет. Обновим количество.
+        /* Куда хотят положить уже есть предмет. Обновим количество. */
         int count = query.value(0).toInt(); 
         int id = query.value(1).toInt(); 
         if (id == item->getId()) {
-            // не обрабатывать на себе
+            /* не обрабатывать при применении к одному и тому же предмету */
             return;
         }
         dataBase->updateItemCount(id, count + item->getCount());
 
         if (item->getId() != -1) {
-            // Если ложимый предмет был не новый удалим его со старого места
+            /* Если предмет который пытаются положить
+             *  был не новый удалим его со старого места */
             dataBase->deleteById(item->getId());
-            // И удалим со старым значением сам предмет TODO
+            /* И удалим со старым значением сам предмет */
             dataBase->deleteByIdItem(item->getId());
         }
     } else { 
-        // Ложим на пустую ячейку
+        /* Если кладут на пустую ячейку */
         if (item->getId() != -1) {
-            // Ложим не новый предмет - удалим сначала со старого места
+            /* Кладут не новый предмет - удалим сначала со старого места */
             dataBase->deleteById(item->getId());
             dataBase->addInventoryItem(item->getId(), col, row);
         } else {
-            // создаём новый предмет в пустой ячейке
+            /* создаём новый предмет в пустой ячейке */
             int lastid = dataBase->addNewItem("apple", item->getCount(), item->getType(), item->getImagePath());
             dataBase->addInventoryItem(lastid, col, row);
         }
