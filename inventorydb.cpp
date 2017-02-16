@@ -1,6 +1,7 @@
 #include "inventorydb.h"
 static const char *dbFile = "./resources/inventory.db";
 
+/* Конструктор базы инвентаря. */
 InventoryDB::InventoryDB()
 {
     dataBase = new DataBase(QString(dbFile));
