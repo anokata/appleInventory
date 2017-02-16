@@ -11,7 +11,7 @@
 #include "qonecellwidget.h"
 #include "const.h"
 
-const QString appleWav = "./resources/apple-crunch.wav";
+const QString appleWav = ":/resources/apple-crunch.wav";
 
 class QInvTableWidget : public QOneCellWidget
 {

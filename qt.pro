@@ -7,6 +7,8 @@ INCLUDEPATH += .
 DEPENDPATH += .
 QT += sql
 QT += multimedia
+RESOURCES = resources.qrc
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 # Input
@@ -18,7 +20,8 @@ HEADERS += gamefield.h \
            qonecellwidget.h \
            window.h \
     database.h \
-    const.h
+    const.h \
+    inventorydb.h
 SOURCES += gamefield.cpp \
            inventory.cpp \
            item.cpp \
@@ -27,4 +30,5 @@ SOURCES += gamefield.cpp \
            qinvtablewidget.cpp \
            qonecellwidget.cpp \
            window.cpp \
-    database.cpp
+    database.cpp \
+    inventorydb.cpp

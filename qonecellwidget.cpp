@@ -1,5 +1,5 @@
 #include "qonecellwidget.h"
-static const char *appleImage = "./resources/apple.jpg";
+static const char *appleImage = ":/resources/apple.jpg";
 
 /* Конструктор виджета источника предметов. */
 QOneCellWidget::QOneCellWidget(QWidget *parent) : QTableWidget(1, 1, parent)

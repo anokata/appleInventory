@@ -1,5 +1,4 @@
 #include "inventory.h"
-static const char *dbFile = "./resources/inventory.db";
 
 /* Конструктор инвентаря. Иницилизация контейнера. Подключение к БД */
 Inventory::Inventory(int cols, int rows)
@@ -9,7 +8,7 @@ Inventory::Inventory(int cols, int rows)
         items[i] = QVector<Item*>(cols);
     }
 
-    dataBase = new DataBase(QString(dbFile));
+    inventoryDB = new InventoryDB();
     fromDB();
 }
 
@@ -17,12 +16,12 @@ Inventory::Inventory(int cols, int rows)
 Inventory::~Inventory()
 {
     deleteItems();
-    delete dataBase;
+    delete inventoryDB;
 }
 
 /* Метод очистки базы данных */
 void Inventory::wipeDB() {
-    dataBase->wipeDB();
+    inventoryDB->clearInventory();
     fromDB();
 }
 
@@ -31,7 +30,7 @@ void Inventory::fromDB()
 {
     deleteItems();
 
-    QSqlQuery query = dataBase->getAllItems();
+    QSqlQuery query = inventoryDB->getAllItems();
     while (query.next()) { 
         int x = query.value(0).toInt(); 
         int y = query.value(1).toInt(); 
@@ -77,7 +76,7 @@ void Inventory::deleteItems()
 /* Метод перемещения предмета */
 void Inventory::moveItem(Item *item, int col, int row)
 {
-    QSqlQuery query = dataBase->itemAtCell(col, row);
+    QSqlQuery query = inventoryDB->itemAtCell(col, row);
     if (query.next()) {
         /* Куда хотят положить уже есть предмет. Обновим количество. */
         int count = query.value(0).toInt(); 
@@ -86,25 +85,25 @@ void Inventory::moveItem(Item *item, int col, int row)
             /* не обрабатывать при применении к одному и тому же предмету */
             return;
         }
-        dataBase->updateItemCount(id, count + item->getCount());
+        inventoryDB->updateItemCount(id, count + item->getCount());
 
         if (item->getId() != -1) {
             /* Если предмет который пытаются положить
              *  был не новый удалим его со старого места */
-            dataBase->deleteById(item->getId());
+            inventoryDB->deleteById(item->getId());
             /* И удалим со старым значением сам предмет */
-            dataBase->deleteByIdItem(item->getId());
+            inventoryDB->deleteByIdItem(item->getId());
         }
     } else { 
         /* Если кладут на пустую ячейку */
         if (item->getId() != -1) {
             /* Кладут не новый предмет - удалим сначала со старого места */
-            dataBase->deleteById(item->getId());
-            dataBase->addInventoryItem(item->getId(), col, row);
+            inventoryDB->deleteById(item->getId());
+            inventoryDB->addInventoryItem(item->getId(), col, row);
         } else {
             /* создаём новый предмет в пустой ячейке */
-            int lastid = dataBase->addNewItem("apple", item->getCount(), item->getType(), item->getImagePath());
-            dataBase->addInventoryItem(lastid, col, row);
+            int lastid = inventoryDB->addNewItem("apple", item->getCount(), item->getType(), item->getImagePath());
+            inventoryDB->addInventoryItem(lastid, col, row);
         }
     }
     query.finish();
@@ -113,15 +112,15 @@ void Inventory::moveItem(Item *item, int col, int row)
 /* Метод съедания предмета */
 bool Inventory::eatItem(int col, int row)
 {
-    QSqlQuery query = dataBase->itemAtCell(col, row);
+    QSqlQuery query = inventoryDB->itemAtCell(col, row);
     if (query.next()) {
         int count = query.value(0).toInt(); 
         int id = query.value(1).toInt(); 
         if (count == 1) {
-            dataBase->deleteById(id);
-            dataBase->deleteByIdItem(id);
+            inventoryDB->deleteById(id);
+            inventoryDB->deleteByIdItem(id);
         } else {
-            dataBase->updateItemCount(id, count - 1);
+            inventoryDB->updateItemCount(id, count - 1);
         }
         query.finish();
         return true;

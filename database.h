@@ -13,14 +13,8 @@ class DataBase
 public:
     DataBase(QString);
     ~DataBase();
-    QSqlQuery itemAtCell(int col, int row);
-    void deleteById(int id);
-    void updateItemCount(int id, int newCount);
-    void addInventoryItem(int id, int row, int col);
-    int addNewItem(QString name, int count, ItemType type, QString path);
-    void deleteByIdItem(int id);
-    QSqlQuery getAllItems();
-    void wipeDB();
+    QSqlQuery queryExec(QString);
+    QSqlQuery queryExec(QSqlQuery query);
 
 private:
     QSqlDatabase db;

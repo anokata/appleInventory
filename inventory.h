@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 
 #include "item.h"
-#include "database.h"
+#include "inventorydb.h"
 
 class Inventory
 {
@@ -24,7 +24,7 @@ public:
 private:
     void deleteItems();
     QVector< QVector<Item*> > items;
-    DataBase *dataBase;
+    InventoryDB *inventoryDB;
 
 };
 
