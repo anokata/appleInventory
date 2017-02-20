@@ -10,6 +10,9 @@ Window::Window(QWidget *parent) : QWidget(parent)
 
     mainMenuWidget = new MainMenu(this);
     gameField = new GameField(this);
+
+    client = new Client("127.0.0.1", 10000);
+    connect(client, SIGNAL(dataRecived()), this, SLOT(haveData()));
 }
 
 /* Деструктор главного окна */
@@ -17,7 +20,14 @@ Window::~Window()
 {
     delete mainMenuWidget;
     delete gameField;
+    delete client;
 }
+
+void Window::haveData()
+{
+    qDebug() << client->getData();
+}
+// client->sendToServer(QString("<client data>"));
 
 /* Слот для перехода в главное меню */
 void Window::goMainMenu()

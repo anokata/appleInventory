@@ -21,7 +21,7 @@ HEADERS += gamefield.h \
            window.h \
     database.h \
     const.h \
-    inventorydb.h
+    inventorydb.h server.h client.h serverwindow.h
 SOURCES += gamefield.cpp \
            inventory.cpp \
            item.cpp \
@@ -31,4 +31,4 @@ SOURCES += gamefield.cpp \
            qonecellwidget.cpp \
            window.cpp \
     database.cpp \
-    inventorydb.cpp
+    inventorydb.cpp server.cpp client.cpp serverwindow.cpp

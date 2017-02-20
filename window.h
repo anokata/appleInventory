@@ -6,6 +6,7 @@
 
 #include "mainmenu.h"
 #include "gamefield.h"
+#include "client.h"
 
 class QPushButton;
 class Window : public QWidget
@@ -22,9 +23,13 @@ public slots:
     void exit();
     void goMainMenu();
 
+private slots:
+    void haveData();
+
 private:
     MainMenu *mainMenuWidget;
     GameField *gameField;
+    Client *client;
 };
 
 #endif // WINDOW_H
